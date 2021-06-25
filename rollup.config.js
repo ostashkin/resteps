@@ -9,15 +9,19 @@ export default {
       name: 'resteps',
       file: pkg.browser,
       format: 'umd',
+      globals: { react: 'React' },
     },
     {
       file: pkg.main,
       format: 'cjs',
+      globals: { react: 'React' },
     },
     {
       file: pkg.module,
       format: 'es',
+      globals: { react: 'React' },
     },
   ],
   plugins: [typescript(), terser()],
+  external: ['react'],
 };
