@@ -1,1 +1,3 @@
-const a = { c: 100 };
+const MOCKED_LIBRARY = 'MOCKED_LIBRARY';
+
+export { MOCKED_LIBRARY };
