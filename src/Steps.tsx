@@ -7,6 +7,7 @@ import { ReducerActions } from './types/reducer';
 import { stepsReducer } from './stepsReducer';
 import { StepsBooleanInfo } from './types/info';
 import { GetState } from './types/api';
+import { StepsProvider } from './stepsContext';
 
 function useSteps<StepsHash extends StepsBase = StepsBase>(
   config: StepsConfig<StepsHash>
@@ -153,7 +154,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
 function Steps<StepsHash extends StepsBase = StepsBase>(config: StepsConfig<StepsHash>) {
   const childrenProps = useSteps<StepsHash>(config);
   const { children } = config;
-  return <div>{children(childrenProps)}</div>;
+  return <StepsProvider value={childrenProps}>{children(childrenProps)}</StepsProvider>;
 }
 
 export { Steps };
