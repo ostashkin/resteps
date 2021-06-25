@@ -1,7 +1,5 @@
 name: Check PullRequest
-
 on: ['pull_request']
-
 jobs:
   check:
     runs-on: ubuntu-18.04
