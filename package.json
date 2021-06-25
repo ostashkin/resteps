@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint src/**/**.* --rule \"{no-console: 2, no-alert: 2, no-debugger: 2}\"",
+    "prepare": "husky install",
     "test": "jest"
   },
   "devDependencies": {
