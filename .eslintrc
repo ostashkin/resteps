@@ -18,6 +18,10 @@
   },
   "rules": {
     "import/prefer-default-export": 0,
+    "import/no-unresolved": [
+      2,
+      { "ignore": ["react"] }
+    ],
     "no-unused-vars": 0,
     "@typescript-eslint/no-unused-vars": [
       2,
@@ -34,6 +38,6 @@
     "@typescript-eslint/no-use-before-define": 2,
     "no-redeclare": 0,
     "@typescript-eslint/no-redeclare": 2,
-    "import/extensions": [2, "ignorePackages", { "ts": "never" }]
+    "import/extensions": [2, "ignorePackages", { "ts": "never", "tsx": "never" }]
   }
 }

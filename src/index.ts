@@ -1,3 +1,3 @@
-const MOCKED_LIBRARY = 'MOCKED_LIBRARY_15';
+import { Steps } from './Steps';
 
-export { MOCKED_LIBRARY };
+export { Steps };
