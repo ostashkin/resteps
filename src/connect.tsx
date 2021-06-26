@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { StepsChildrenProps } from './types/props';
 import { useStepsContext } from './stepsContext';
+import { ConnectedStepProps } from './types/ConnectedStep';
 
 interface ConnectConfig {
   layout: React.ComponentType<Omit<ConnectConfig, 'layout'>>; // в пропсах должны быть нижестоящие компоненты;
@@ -11,8 +12,8 @@ interface ConnectConfig {
   footer?: React.ComponentType<StepsChildrenProps<any>>;
 }
 
-function connect(config: ConnectConfig): React.ComponentType<any> {
-  const ConnectedComponent: React.FC = () => {
+function connect(config: ConnectConfig): React.ComponentType<ConnectedStepProps> {
+  const ConnectedComponent: React.FC<ConnectedStepProps> = () => {
     // unconfirmedValues();
     // validated();
     // detectChange();
