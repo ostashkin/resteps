@@ -1,6 +1,6 @@
 {
   "name": "resteps",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "react steps",
   "main": "dist/index.js",
   "module": "dist/index.umd.js",
@@ -18,7 +18,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rimraf dist && mkdirp dist && rollup -c",
-    "lint": "eslint src/**/**.* --rule \"{no-console: 2, no-alert: 2, no-debugger: 2}\"",
+    "lint": "eslint src/**/**.* --rule \"{no-alert: 2, no-debugger: 2}\"",
     "prepare": "husky install",
     "test": "jest"
   },

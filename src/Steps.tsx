@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StepsConfig } from './types/config';
 import { StepsBase } from './types/steps';
 import { StepsChildrenProps } from './types/props';
@@ -8,6 +8,7 @@ import { stepsReducer } from './stepsReducer';
 import { StepsBooleanInfo } from './types/info';
 import { GetState } from './types/api';
 import { StepsProvider } from './stepsContext';
+import { strictEqual } from './utils';
 
 function useSteps<StepsHash extends StepsBase = StepsBase>(
   config: StepsConfig<StepsHash>
@@ -29,6 +30,14 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     } as StepsBooleanInfo<StepsHash>,
     pendingSteps: config.initialPending || {},
   });
+
+  const previousValues = useRef<StepsHash>(config.initialValues);
+
+  useEffect(() => {
+    if (!strictEqual(state.values, previousValues.current)) {
+      previousValues.current = state.values;
+    }
+  }, [state.values]);
 
   function setOpen<StepID extends keyof StepsHash>(
     stepIDORPayload: StepID | StepsBooleanInfo<StepsHash>,
@@ -105,6 +114,8 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     values?: StepsHash[StepID]
   ) {
     if (typeof stepIDORPayload === 'object') {
+      console.log(stepIDORPayload);
+      console.log(previousValues.current);
       dispatch({ type: 'SET_ALL_VALUES', payload: stepIDORPayload });
     } else {
       dispatch({
