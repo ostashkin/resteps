@@ -38,6 +38,9 @@
     "@typescript-eslint/no-use-before-define": 2,
     "no-redeclare": 0,
     "@typescript-eslint/no-redeclare": 2,
-    "import/extensions": [2, "ignorePackages", { "ts": "never", "tsx": "never" }]
+    "import/extensions": [2, "ignorePackages", { "ts": "never", "tsx": "never" }],
+    "no-console": 1,
+    "no-alert": 1,
+    "no-debugger": 1,
   }
 }

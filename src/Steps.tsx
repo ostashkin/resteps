@@ -8,13 +8,14 @@ import { stepsReducer } from './stepsReducer';
 import { StepsBooleanInfo } from './types/info';
 import { GetState } from './types/api';
 import { StepsProvider } from './stepsContext';
-import { strictEqual } from './utils';
+import { findChangedSteps, strictEqual } from './utils';
 
 function useSteps<StepsHash extends StepsBase = StepsBase>(
   config: StepsConfig<StepsHash>
 ): StepsChildrenProps<StepsHash> {
   const initialValues = React.useRef<StepsHash>(config.initialValues);
   const initialActive = React.useRef<keyof StepsHash>(config.initialActive);
+  const changedSteps = React.useRef<(keyof StepsHash)[]>([]);
 
   const [state, dispatch] = React.useReducer<
     React.Reducer<StepsState<StepsHash>, ReducerActions<StepsHash>>
@@ -114,8 +115,9 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     values?: StepsHash[StepID]
   ) {
     if (typeof stepIDORPayload === 'object') {
-      console.log(stepIDORPayload);
-      console.log(previousValues.current);
+      const steps = findChangedSteps(stepIDORPayload, previousValues.current);
+      changedSteps.current = steps;
+      console.log(changedSteps.current);
       dispatch({ type: 'SET_ALL_VALUES', payload: stepIDORPayload });
     } else {
       dispatch({
@@ -150,6 +152,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     ...state,
     initialValues: initialValues.current,
     initialActive: initialActive.current,
+    changedSteps: changedSteps.current,
     setActive,
     setOpen,
     setConfirmed,
