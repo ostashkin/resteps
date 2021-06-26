@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StepsChildrenProps } from './types/props';
 import { useStepsContext } from './stepsContext';
 
@@ -28,15 +28,40 @@ function connect(config: ConnectConfig): React.ComponentType<any> {
       return WrappedComponent;
     }
 
-    const connectedComponents: Omit<ConnectConfig, 'layout'> = {
-      body: body ? connectContext(body) : undefined,
-      number: number ? connectContext(number) : undefined,
-      label: label ? connectContext(label) : undefined,
-      border: border ? connectContext(border) : undefined,
-      footer: footer ? connectContext(footer) : undefined,
-    };
+    const memoizedBody = useMemo(
+      () => (body === undefined ? undefined : connectContext(body)),
+      [body]
+    );
 
-    return <Layout {...connectedComponents} />;
+    const memoizedNumber = useMemo(
+      () => (border === undefined ? undefined : connectContext(border)),
+      [border]
+    );
+
+    const memoizedLabel = useMemo(
+      () => (footer === undefined ? undefined : connectContext(footer)),
+      [footer]
+    );
+
+    const memoizedBorder = useMemo(
+      () => (label === undefined ? undefined : connectContext(label)),
+      [label]
+    );
+
+    const memoizedFooter = useMemo(
+      () => (number === undefined ? undefined : connectContext(number)),
+      [number]
+    );
+
+    return (
+      <Layout
+        body={memoizedBody}
+        number={memoizedNumber}
+        label={memoizedLabel}
+        border={memoizedBorder}
+        footer={memoizedFooter}
+      />
+    );
   };
 
   return ConnectedComponent;
