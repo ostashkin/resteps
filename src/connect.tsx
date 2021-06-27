@@ -14,8 +14,6 @@ function connect<ComponentProps extends StepComponentProps>(
     // TODO THIS COMPONENT WILL ALWAYS RERENDER, BUT WRAPPED COMPONENT SHOULD HAS MEMOIZATION
     const { rerenderStatus, ...restContext } = useStep(id, hooks);
 
-    console.log(id, rerenderStatus);
-
     return useMemo(() => <Component {...(restContext as any)} />, [rerenderStatus]);
   };
 

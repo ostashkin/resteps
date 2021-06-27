@@ -56,6 +56,11 @@ const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<St
           [action.payload.stepID]: action.payload.isFailed,
         },
       };
+    case 'SET_STEPS_ORDER':
+      return {
+        ...state,
+        orderHash: action.payload,
+      };
     default:
       return state;
   }

@@ -18,6 +18,8 @@ export interface StepAPI<StepValue> {
   setConfirmedStatus: (status: boolean) => void;
   setPendingStatus: (status: boolean) => void;
   setFailedStatus: (status: boolean) => void;
+  detectChange: () => void;
+  order?: number;
 }
 
 export interface UseStepResult<StepsHash extends StepsBase, StepValue> {
