@@ -5,6 +5,7 @@ import { StepsAPI } from './api';
 export interface StepsComputedProps<StepsHash extends StepsBase> {
   readonly initialValues: StepsHash;
   readonly initialActive: keyof StepsHash;
+  readonly changedSteps: (keyof StepsHash)[];
 }
 
 export type StepsChildrenProps<StepsHash extends StepsBase> = StepsState<StepsHash> &

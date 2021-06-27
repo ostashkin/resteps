@@ -1,5 +1,5 @@
 import { StepsBase } from './steps';
-import { StepsBooleanInfo } from './info';
+import { StepsBooleanInfo, StepsInfo } from './info';
 
 export type ReducerActions<Steps extends StepsBase> =
   // Actions applied to whole Steps State
@@ -16,4 +16,6 @@ export type ReducerActions<Steps extends StepsBase> =
   | { type: 'SET_STEP_OPEN_STATUS'; payload: { stepID: keyof Steps; isOpen: boolean } }
   | { type: 'SET_STEP_PENDING_STATUS'; payload: { stepID: keyof Steps; isPending: boolean } }
   | { type: 'SET_STEP_CONFIRMED_STATUS'; payload: { stepID: keyof Steps; isConfirmed: boolean } }
-  | { type: 'SET_STEP_FAILED_STATUS'; payload: { stepID: keyof Steps; isFailed: boolean } };
+  | { type: 'SET_STEP_FAILED_STATUS'; payload: { stepID: keyof Steps; isFailed: boolean } }
+  // Action for creating steps order
+  | { type: 'SET_STEPS_ORDER'; payload: StepsInfo<Steps, number> };

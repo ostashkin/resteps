@@ -1,5 +1,5 @@
 import { StepsBase } from './steps';
-import { StepsBooleanInfo } from './info';
+import { StepsBooleanInfo, StepsInfo } from './info';
 
 export interface StepsState<StepsHash extends StepsBase> {
   values: StepsHash;
@@ -9,4 +9,5 @@ export interface StepsState<StepsHash extends StepsBase> {
   failedSteps: StepsBooleanInfo<StepsHash>;
   openSteps: StepsBooleanInfo<StepsHash>;
   pendingSteps: StepsBooleanInfo<StepsHash>;
+  orderHash: StepsInfo<StepsHash, number>;
 }

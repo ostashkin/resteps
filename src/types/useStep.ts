@@ -1,4 +1,7 @@
-export interface UseStepResult<StepValue> {
+import { StepsBase } from './steps';
+import { StepsContext } from './context';
+
+export interface StepAPI<StepValue> {
   initialValue: StepValue;
   initialActive: boolean;
   currentValue: StepValue;
@@ -15,4 +18,12 @@ export interface UseStepResult<StepValue> {
   setConfirmedStatus: (status: boolean) => void;
   setPendingStatus: (status: boolean) => void;
   setFailedStatus: (status: boolean) => void;
+  detectChange: () => void;
+  order?: number;
+}
+
+export interface UseStepResult<StepsHash extends StepsBase, StepValue> {
+  step: StepAPI<StepValue>;
+  stepsAPI: StepsContext<StepsHash>;
+  rerenderStatus: number;
 }

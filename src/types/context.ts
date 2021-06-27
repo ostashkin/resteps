@@ -1,4 +1,6 @@
 import { StepsBase } from './steps';
 import { StepsChildrenProps } from './props';
 
-export type StepsContext<StepsHash extends StepsBase> = StepsChildrenProps<StepsHash>;
+export interface StepsContext<StepsHash extends StepsBase> extends StepsChildrenProps<StepsHash> {
+  calculateStepOrder: (stepID: keyof StepsHash) => void;
+}

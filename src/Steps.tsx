@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StepsConfig } from './types/config';
 import { StepsBase } from './types/steps';
-import { StepsChildrenProps } from './types/props';
 import { StepsState } from './types/state';
 import { ReducerActions } from './types/reducer';
 import { stepsReducer } from './stepsReducer';
 import { StepsBooleanInfo } from './types/info';
 import { GetState } from './types/api';
 import { StepsProvider } from './stepsContext';
+import { findChangedSteps, strictEqual } from './utils';
+import { StepsContext } from './types/context';
 
 function useSteps<StepsHash extends StepsBase = StepsBase>(
   config: StepsConfig<StepsHash>
-): StepsChildrenProps<StepsHash> {
+): StepsContext<StepsHash> {
   const initialValues = React.useRef<StepsHash>(config.initialValues);
   const initialActive = React.useRef<keyof StepsHash>(config.initialActive);
+  const changedSteps = React.useRef<(keyof StepsHash)[]>([]);
 
   const [state, dispatch] = React.useReducer<
     React.Reducer<StepsState<StepsHash>, ReducerActions<StepsHash>>
@@ -28,7 +30,16 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
       [config.initialActive]: true,
     } as StepsBooleanInfo<StepsHash>,
     pendingSteps: config.initialPending || {},
+    orderHash: {},
   });
+
+  const previousValues = useRef<StepsHash>(config.initialValues);
+
+  useEffect(() => {
+    if (!strictEqual(state.values, previousValues.current)) {
+      previousValues.current = state.values;
+    }
+  }, [state.values]);
 
   function setOpen<StepID extends keyof StepsHash>(
     stepIDORPayload: StepID | StepsBooleanInfo<StepsHash>,
@@ -105,8 +116,12 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     values?: StepsHash[StepID]
   ) {
     if (typeof stepIDORPayload === 'object') {
+      // TODO Write comment or refactor
+      changedSteps.current = findChangedSteps(stepIDORPayload, previousValues.current);
       dispatch({ type: 'SET_ALL_VALUES', payload: stepIDORPayload });
     } else {
+      // TODO Write comment or refactor
+      changedSteps.current = [stepIDORPayload];
       dispatch({
         type: 'SET_STEP_VALUES',
         payload: { stepID: stepIDORPayload, values },
@@ -135,10 +150,39 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     return isStepConfirmed || false;
   }
 
+  const isReorderRequired = useRef<boolean>(true);
+  const stepsOrder = useRef<(keyof StepsHash)[]>([]);
+  const previousStepsOrder = useRef<(keyof StepsHash)[]>([]);
+
+  const createStepsOrder = (id: keyof StepsHash) => {
+    if (previousStepsOrder.current.length === 0) {
+      stepsOrder.current.push(id);
+    } else {
+      const stepOrder = stepsOrder.current.push(id);
+      if (stepOrder !== state.orderHash[id]) {
+        isReorderRequired.current = true;
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isReorderRequired.current) {
+      isReorderRequired.current = false;
+      previousStepsOrder.current = Array.prototype.concat.call(stepsOrder.current);
+      const orderHash = stepsOrder.current.reduce(
+        (acc, stepID, index) => ({ ...acc, [stepID]: index + 1 }),
+        {}
+      );
+      dispatch({ type: 'SET_STEPS_ORDER', payload: orderHash });
+    }
+    stepsOrder.current.length = 0;
+  });
+
   return {
     ...state,
     initialValues: initialValues.current,
     initialActive: initialActive.current,
+    changedSteps: changedSteps.current,
     setActive,
     setOpen,
     setConfirmed,
@@ -148,13 +192,15 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     setValues,
     getValues,
     getConfirmed: getConfirmed as GetState<StepsHash, boolean>,
+    calculateStepOrder: createStepsOrder,
   };
 }
 
 function Steps<StepsHash extends StepsBase = StepsBase>(config: StepsConfig<StepsHash>) {
-  const childrenProps = useSteps<StepsHash>(config);
+  const contextValue = useSteps<StepsHash>(config);
+  const { calculateStepOrder, ...childrenProps } = contextValue;
   const { children } = config;
-  return <StepsProvider value={childrenProps}>{children(childrenProps)}</StepsProvider>;
+  return <StepsProvider value={contextValue}>{children(childrenProps)}</StepsProvider>;
 }
 
 export { Steps };
