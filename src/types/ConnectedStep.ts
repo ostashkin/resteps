@@ -6,5 +6,5 @@ export interface ConnectedStepProps {
   debug: boolean;
 }
 
-export interface StepComponentProps<StepsHash extends StepsBase = StepsBase, StepsValue = any>
+export interface StepComponentProps<StepsHash extends StepsBase, StepsValue = any>
   extends UseStepResult<StepsHash, StepsValue> {}

@@ -1,6 +1,6 @@
 {
   "name": "resteps",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "react steps",
   "main": "dist/index.js",
   "module": "dist/index.umd.js",
