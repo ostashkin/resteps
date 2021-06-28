@@ -2,8 +2,13 @@ import React, { useMemo } from 'react';
 import { ConnectedStepProps, StepComponentProps } from './types/ConnectedStep';
 import { useStep } from './useStep';
 import { Debug } from './Debug';
+import { StepsBase } from './types/steps';
 
-function connect<ComponentProps extends StepComponentProps>(
+function connect<
+  StepsHash extends StepsBase,
+  Value,
+  ComponentProps extends StepComponentProps<StepsHash, Value>
+>(
   Component: React.ComponentType<ComponentProps>,
   hooks: string[] = []
 ): React.ComponentType<ConnectedStepProps> {
