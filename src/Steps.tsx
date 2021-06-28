@@ -130,6 +130,11 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
   }
 
   function setActive<StepID extends keyof StepsHash>(stepID: StepID, isActive: boolean) {
+    // TODO some refactor and comments
+    const isTargetStepOpen = state.openSteps[stepID];
+    if (isActive && !isTargetStepOpen) {
+      dispatch({ type: 'SET_STEP_OPEN_STATUS', payload: { stepID, isOpen: true } });
+    }
     dispatch({ type: 'SET_STEP_ACTIVE_STATUS', payload: { stepID, isActive } });
   }
 
