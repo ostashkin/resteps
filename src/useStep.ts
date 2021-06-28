@@ -168,7 +168,7 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
       setStepActiveStatus(true);
       setStepTouchedStatus(true);
       if (isStepConfirmed) setStepConfirmedStatus(false);
-    }
+    } else if (!isStepTouched) setStepTouchedStatus(true);
   };
 
   return {
