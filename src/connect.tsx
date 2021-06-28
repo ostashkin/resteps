@@ -5,12 +5,12 @@ import { Debug } from './Debug';
 import { StepsBase } from './types/steps';
 
 function connect<
-  StepsHash extends StepsBase,
-  Value,
-  ComponentProps extends StepComponentProps<StepsHash, Value>
+  StepsHash extends StepsBase = any,
+  Value = any,
+  ComponentProps = StepComponentProps<StepsHash, Value>
 >(
   Component: React.ComponentType<ComponentProps>,
-  hooks: string[] = []
+  hooks: (keyof StepsHash)[] = []
 ): React.ComponentType<ConnectedStepProps> {
   const ConnectedComponent: React.FC<ConnectedStepProps> = ({ id, debug }) => {
     // unconfirmedValues();
