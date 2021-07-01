@@ -84,8 +84,8 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
     /** If the step was touched or failed,
      * then its confirmation should set these statuses to 'false'
      * */
-    if (isStepTouched) setStepTouchedStatus(false);
-    if (isStepFailed) setStepFailedStatus(false);
+    // if (isStepTouched) setStepTouchedStatus(false);
+    // if (isStepFailed) setStepFailedStatus(false);
     setConfirmed(stepID, status);
   };
 
@@ -164,21 +164,21 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
    * as part of event handlers.
    */
   const detectChange = () => {
-    setStepActiveStatus(true);
-    setStepTouchedStatus(true);
-    setStepConfirmedStatus(false);
-    // if (!isStepActive) {
-    //   console.log('step was passive!');
-    //   setStepActiveStatus(true);
-    //   setStepTouchedStatus(true);
-    //   if (isStepConfirmed) {
-    //     console.log('step was confirmed!');
-    //     setStepConfirmedStatus(false);
-    //   }
-    // } else if (!isStepTouched) {
-    //   console.log('step was not active, but touched!');
-    //   setStepTouchedStatus(true);
-    // }
+    // setStepActiveStatus(true);
+    // setStepTouchedStatus(true);
+    // setStepConfirmedStatus(false);
+    if (!isStepActive) {
+      console.log('step was passive!');
+      setStepActiveStatus(true);
+      setStepTouchedStatus(true);
+      if (isStepConfirmed) {
+        console.log('step was confirmed!');
+        setStepConfirmedStatus(false);
+      }
+    } else if (!isStepTouched) {
+      console.log('step was active, but not touched!');
+      setStepTouchedStatus(true);
+    }
   };
 
   return {
