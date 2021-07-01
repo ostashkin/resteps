@@ -55,20 +55,6 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     }
   }
 
-  function setConfirmed<StepID extends keyof StepsHash>(
-    stepIDORPayload: StepID | StepsBooleanInfo<StepsHash>,
-    isConfirmed?: boolean
-  ) {
-    if (typeof stepIDORPayload === 'object') {
-      dispatch({ type: 'SET_ALL_CONFIRMED_STATUSES', payload: stepIDORPayload });
-    } else {
-      dispatch({
-        type: 'SET_STEP_CONFIRMED_STATUS',
-        payload: { stepID: stepIDORPayload, isConfirmed: isConfirmed as StepsHash[StepID] },
-      });
-    }
-  }
-
   function setFailed<StepID extends keyof StepsHash>(
     stepIDORPayload: StepID | StepsBooleanInfo<StepsHash>,
     isFailed?: boolean
@@ -153,6 +139,20 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     if (stepID === undefined) return confirmedSteps;
     const { [stepID]: isStepConfirmed } = confirmedSteps;
     return isStepConfirmed || false;
+  }
+
+  function setConfirmed<StepID extends keyof StepsHash>(
+    stepIDORPayload: StepID | StepsBooleanInfo<StepsHash>,
+    isConfirmed?: boolean
+  ) {
+    if (typeof stepIDORPayload === 'object') {
+      dispatch({ type: 'SET_ALL_CONFIRMED_STATUSES', payload: stepIDORPayload });
+    } else {
+      dispatch({
+        type: 'SET_STEP_CONFIRMED_STATUS',
+        payload: { stepID: stepIDORPayload, isConfirmed: isConfirmed as StepsHash[StepID] },
+      });
+    }
   }
 
   const isReorderRequired = useRef<boolean>(true);
