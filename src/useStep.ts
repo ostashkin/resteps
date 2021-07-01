@@ -164,18 +164,21 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
    * as part of event handlers.
    */
   const detectChange = () => {
-    if (!isStepActive) {
-      console.log('step was passive!');
-      setStepActiveStatus(true);
-      setStepTouchedStatus(true);
-      if (isStepConfirmed) {
-        console.log('step was confirmed!');
-        setStepConfirmedStatus(false);
-      }
-    } else if (!isStepTouched) {
-      console.log('step was not active, but touched!');
-      setStepTouchedStatus(true);
-    }
+    setStepActiveStatus(true);
+    setStepTouchedStatus(true);
+    setStepConfirmedStatus(false);
+    // if (!isStepActive) {
+    //   console.log('step was passive!');
+    //   setStepActiveStatus(true);
+    //   setStepTouchedStatus(true);
+    //   if (isStepConfirmed) {
+    //     console.log('step was confirmed!');
+    //     setStepConfirmedStatus(false);
+    //   }
+    // } else if (!isStepTouched) {
+    //   console.log('step was not active, but touched!');
+    //   setStepTouchedStatus(true);
+    // }
   };
 
   return {
