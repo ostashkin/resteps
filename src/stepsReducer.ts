@@ -1,5 +1,11 @@
 import { StepsState } from './types/state';
 import { ReducerActions } from './types/reducer';
+import { StepsBooleanInfo } from './types/info';
+
+const getOpenSteps = <Steps>(stepsInfo: StepsBooleanInfo<Steps>, nextStep?: keyof Steps) => {
+  if (nextStep === undefined) return stepsInfo;
+  return { ...stepsInfo, [nextStep]: stepsInfo[nextStep] };
+};
 
 const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<Steps>) => {
   switch (action.type) {
@@ -47,6 +53,7 @@ const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<St
         confirmedSteps: { ...state.confirmedSteps, [action.payload.stepID]: true },
         touchedSteps: { ...state.touchedSteps, [action.payload.stepID]: false },
         failedSteps: { ...state.failedSteps, [action.payload.stepID]: false },
+        openSteps: getOpenSteps(state.openSteps, action.payload.nextStep),
       };
     case 'RESET_STEP_CONFIRMATION':
       return {
