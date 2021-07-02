@@ -33,6 +33,14 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     orderHash: {},
   });
 
+  const needToCallConfirmCallback = useRef<boolean>(false);
+  useEffect(() => {
+    if (needToCallConfirmCallback) {
+      needToCallConfirmCallback.current = false;
+      if (config.onStepConfirmed !== undefined) config.onStepConfirmed(state.values);
+    }
+  }, [state]);
+
   const previousValues = useRef<StepsHash>(config.initialValues);
 
   useEffect(() => {
@@ -143,16 +151,27 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
 
   function setConfirmed<StepID extends keyof StepsHash>(
     stepIDORPayload: StepID | StepsBooleanInfo<StepsHash>,
-    params: SetConfirmedStateParams<StepsHash> = {}
+    params: SetConfirmedStateParams<StepsHash, StepID> = {}
   ) {
+    needToCallConfirmCallback.current = true;
     if (typeof stepIDORPayload === 'object') {
       dispatch({ type: 'SET_ALL_CONFIRMED_STATUSES', payload: stepIDORPayload });
     } else {
-      const defaultParams: SetConfirmedStateParams<StepsHash> = { nextStep: '', render: true };
-      const mergedParams = Object.assign(defaultParams, params);
+      const defaultParams: SetConfirmedStateParams<StepsHash, StepID> = {
+        nextStep: '',
+        render: true,
+      };
+      const mergedParams: SetConfirmedStateParams<StepsHash, StepID> = Object.assign(
+        defaultParams,
+        params
+      );
       dispatch({
         type: 'CONFIRM_STEP',
-        payload: { stepID: stepIDORPayload, nextStep: mergedParams.nextStep },
+        payload: {
+          stepID: stepIDORPayload,
+          nextStep: mergedParams.nextStep,
+          newValues: mergedParams.newValues,
+        },
       });
     }
   }

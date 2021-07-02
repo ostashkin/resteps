@@ -5,6 +5,12 @@ import { StepsBooleanInfo } from './types/info';
 const getOpenSteps = <Steps>(stepsInfo: StepsBooleanInfo<Steps>, nextStep?: keyof Steps) =>
   nextStep === undefined ? stepsInfo : { ...stepsInfo, [nextStep]: true };
 
+const getStepValues = <Steps, StepID extends keyof Steps>(
+  stepsValues: Steps,
+  stepID: StepID,
+  newValues?: Steps[StepID]
+) => (newValues === undefined ? stepsValues : { ...stepsValues, [stepID]: newValues });
+
 const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<Steps>) => {
   switch (action.type) {
     case 'SET_ALL_VALUES':
@@ -48,6 +54,7 @@ const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<St
       return {
         ...state,
         activeStep: action.payload.nextStep || '',
+        values: getStepValues(state.values, action.payload.stepID, action.payload.newValues),
         confirmedSteps: { ...state.confirmedSteps, [action.payload.stepID]: true },
         touchedSteps: { ...state.touchedSteps, [action.payload.stepID]: false },
         failedSteps: { ...state.failedSteps, [action.payload.stepID]: false },

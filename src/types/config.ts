@@ -2,10 +2,9 @@ import React from 'react';
 import { StepsBase } from './steps';
 import { StepsBooleanInfo } from './info';
 import { StepsChildrenProps } from './props';
-import { StepsAPI } from './api';
 
-export interface OnStepsConfirmed<StepsHash extends StepsBase> {
-  (stepsAPI: StepsAPI<StepsHash>): void;
+export interface OnStepConfirmed<StepsHash extends StepsBase> {
+  (steps: StepsHash): void;
 }
 
 export interface StepsConfig<StepsHash extends StepsBase> {
@@ -16,5 +15,5 @@ export interface StepsConfig<StepsHash extends StepsBase> {
   initialTouched?: StepsBooleanInfo<StepsHash>;
   initialPending?: StepsBooleanInfo<StepsHash>;
   initialConfirmed?: StepsBooleanInfo<StepsHash>;
-  onStepsConfirmed?: OnStepsConfirmed<StepsHash>;
+  onStepConfirmed?: OnStepConfirmed<StepsHash>;
 }

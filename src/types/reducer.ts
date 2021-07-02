@@ -17,7 +17,10 @@ export type ReducerActions<Steps extends StepsBase> =
   | { type: 'SET_STEP_PENDING_STATUS'; payload: { stepID: keyof Steps; isPending: boolean } }
   | { type: 'SET_STEP_FAILED_STATUS'; payload: { stepID: keyof Steps; isFailed: boolean } }
   // Step confirmation
-  | { type: 'CONFIRM_STEP'; payload: { stepID: keyof Steps; nextStep?: keyof Steps } }
+  | {
+      type: 'CONFIRM_STEP';
+      payload: { stepID: keyof Steps; newValues: any; nextStep?: keyof Steps };
+    }
   | { type: 'RESET_STEP_CONFIRMATION'; payload: { stepID: keyof Steps } }
   // Step touching
   | { type: 'TOUCH_STEP'; payload: { stepID: keyof Steps } }

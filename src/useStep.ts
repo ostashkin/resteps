@@ -83,7 +83,7 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
   const setStepActiveStatus = (status: boolean) => setActive(stepID, status);
   const setStepPendingStatus = (status: boolean) => setPending(stepID, status);
   const setStepFailedStatus = (status: boolean) => setFailed(stepID, status);
-  const setStepConfirmedStatus = (params: SetConfirmedStateParams<StepsHash> = {}) => {
+  const setStepConfirmedStatus = (params: SetConfirmedStateParams<StepsHash, StepID> = {}) => {
     /** If the step was touched or failed,
      * then its confirmation should set these statuses to 'false'
      * */

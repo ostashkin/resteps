@@ -9,7 +9,11 @@ export interface ParamsWithRender {
   render?: boolean;
 }
 
-export interface SetConfirmedStateParams<StepsHash extends StepsBase> extends ParamsWithRender {
+export interface SetConfirmedStateParams<
+  StepsHash extends StepsBase,
+  StepID extends keyof StepsHash
+> extends ParamsWithRender {
+  newValues?: StepsHash[StepID];
   nextStep?: keyof StepsHash;
 }
 
@@ -17,7 +21,7 @@ export interface SetConfirmedState<StepsHash extends StepsBase> {
   (payload: StepsHash): void;
   <StepID extends keyof StepsHash>(
     stepID: StepID,
-    params: SetConfirmedStateParams<StepsHash>
+    params: SetConfirmedStateParams<StepsHash, StepID>
   ): void;
 }
 
