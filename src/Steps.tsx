@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { StepsConfig } from './types/config';
+import { ConfirmationValues, StepsConfig } from './types/config';
 import { StepsBase } from './types/steps';
 import { StepsState } from './types/state';
 import { ReducerActions } from './types/reducer';
@@ -9,6 +9,19 @@ import { GetState, SetConfirmedStateParams } from './types/api';
 import { StepsProvider } from './stepsContext';
 import { findChangedSteps, strictEqual } from './utils';
 import { StepsContext } from './types/context';
+
+function createConfirmationValues<StepsHash extends StepsBase>(
+  state: StepsState<StepsHash>
+): ConfirmationValues<StepsHash> {
+  return {
+    values: state.values,
+    activeStep: state.activeStep,
+    confirmedSteps: state.confirmedSteps,
+    failedSteps: state.failedSteps,
+    openedSteps: state.openSteps,
+    touchedSteps: state.touchedSteps,
+  };
+}
 
 function useSteps<StepsHash extends StepsBase = StepsBase>(
   config: StepsConfig<StepsHash>
@@ -24,7 +37,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     activeStep: config.initialActive,
     confirmedSteps: config.initialConfirmed || {},
     touchedSteps: config.initialTouched || {},
-    failedSteps: {},
+    failedSteps: config.initialFailed || {},
     openSteps: {
       ...config.initialOpen,
       [config.initialActive]: true,
@@ -37,9 +50,11 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
   useEffect(() => {
     if (needToCallConfirmCallback) {
       needToCallConfirmCallback.current = false;
-      if (config.onStepConfirmed !== undefined) config.onStepConfirmed(state.values);
+      if (config.onStepConfirmed !== undefined) {
+        config.onStepConfirmed(createConfirmationValues(state));
+      }
     }
-  }, [state]);
+  }, [state.confirmedSteps]);
 
   const previousValues = useRef<StepsHash>(config.initialValues);
 
