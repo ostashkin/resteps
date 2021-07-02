@@ -2,10 +2,8 @@ import { StepsState } from './types/state';
 import { ReducerActions } from './types/reducer';
 import { StepsBooleanInfo } from './types/info';
 
-const getOpenSteps = <Steps>(stepsInfo: StepsBooleanInfo<Steps>, nextStep?: keyof Steps) => {
-  if (nextStep === undefined) return stepsInfo;
-  return { ...stepsInfo, [nextStep]: stepsInfo[nextStep] };
-};
+const getOpenSteps = <Steps>(stepsInfo: StepsBooleanInfo<Steps>, nextStep?: keyof Steps) =>
+  nextStep === undefined ? stepsInfo : { ...stepsInfo, [nextStep]: true };
 
 const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<Steps>) => {
   switch (action.type) {
