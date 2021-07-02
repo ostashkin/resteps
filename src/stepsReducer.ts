@@ -40,13 +40,18 @@ const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<St
         ...state,
         pendingSteps: { ...state.pendingSteps, [action.payload.stepID]: action.payload.isPending },
       };
-    case 'SET_STEP_CONFIRMED_STATUS':
+    case 'CONFIRM_STEP':
       return {
         ...state,
-        confirmedSteps: {
-          ...state.confirmedSteps,
-          [action.payload.stepID]: action.payload.isConfirmed,
-        },
+        activeStep: action.payload.nextStep || '',
+        confirmedSteps: { ...state.confirmedSteps, [action.payload.stepID]: true },
+        touchedSteps: { ...state.touchedSteps, [action.payload.stepID]: false },
+        failedSteps: { ...state.failedSteps, [action.payload.stepID]: false },
+      };
+    case 'RESET_STEP_CONFIRMATION':
+      return {
+        ...state,
+        confirmedSteps: { ...state.confirmedSteps, [action.payload.stepID]: false },
       };
     case 'SET_STEP_FAILED_STATUS':
       return {
@@ -56,11 +61,15 @@ const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<St
           [action.payload.stepID]: action.payload.isFailed,
         },
       };
-    case 'SET_STEPS_ORDER':
+    case 'TOUCH_STEP':
       return {
         ...state,
-        orderHash: action.payload,
+        activeStep: action.payload.stepID,
+        confirmedSteps: { ...state.confirmedSteps, [action.payload.stepID]: false },
+        touchedSteps: { ...state.touchedSteps, [action.payload.stepID]: true },
       };
+    case 'SET_STEPS_ORDER':
+      return { ...state, orderHash: action.payload };
     default:
       return state;
   }

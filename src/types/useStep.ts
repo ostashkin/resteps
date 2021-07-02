@@ -1,7 +1,8 @@
 import { StepsBase } from './steps';
 import { StepsContext } from './context';
+import { SetConfirmedStateParams } from './api';
 
-export interface StepAPI<StepValue> {
+export interface StepAPI<StepsHash extends StepsBase, StepValue> {
   initialValue: StepValue;
   initialActive: boolean;
   currentValue: StepValue;
@@ -15,7 +16,7 @@ export interface StepAPI<StepValue> {
   setOpenStatus: (status: boolean) => void;
   setTouchedStatus: (status: boolean) => void;
   setActiveStatus: (status: boolean) => void;
-  setConfirmedStatus: (status: boolean) => void;
+  setConfirmedStatus: (params: SetConfirmedStateParams<StepsHash>) => void;
   setPendingStatus: (status: boolean) => void;
   setFailedStatus: (status: boolean) => void;
   detectChange: () => void;
@@ -23,7 +24,7 @@ export interface StepAPI<StepValue> {
 }
 
 export interface UseStepResult<StepsHash extends StepsBase, StepValue> {
-  step: StepAPI<StepValue>;
+  step: StepAPI<StepsHash, StepValue>;
   stepsAPI: StepsContext<StepsHash>;
   rerenderStatus: number;
 }

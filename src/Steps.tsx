@@ -5,7 +5,7 @@ import { StepsState } from './types/state';
 import { ReducerActions } from './types/reducer';
 import { stepsReducer } from './stepsReducer';
 import { StepsBooleanInfo } from './types/info';
-import { GetState } from './types/api';
+import { GetState, SetConfirmedStateParams } from './types/api';
 import { StepsProvider } from './stepsContext';
 import { findChangedSteps, strictEqual } from './utils';
 import { StepsContext } from './types/context';
@@ -143,16 +143,26 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
 
   function setConfirmed<StepID extends keyof StepsHash>(
     stepIDORPayload: StepID | StepsBooleanInfo<StepsHash>,
-    isConfirmed?: boolean
+    params: SetConfirmedStateParams<StepsHash> = {}
   ) {
     if (typeof stepIDORPayload === 'object') {
       dispatch({ type: 'SET_ALL_CONFIRMED_STATUSES', payload: stepIDORPayload });
     } else {
+      const defaultParams: SetConfirmedStateParams<StepsHash> = { nextStep: '', render: true };
+      const mergedParams = Object.assign(defaultParams, params);
       dispatch({
-        type: 'SET_STEP_CONFIRMED_STATUS',
-        payload: { stepID: stepIDORPayload, isConfirmed: isConfirmed as StepsHash[StepID] },
+        type: 'CONFIRM_STEP',
+        payload: { stepID: stepIDORPayload, nextStep: mergedParams.nextStep },
       });
     }
+  }
+
+  function resetConfirmation(stepID: keyof StepsHash) {
+    dispatch({ type: 'RESET_STEP_CONFIRMATION', payload: { stepID } });
+  }
+
+  function touchStep(stepID: keyof StepsHash) {
+    dispatch({ type: 'TOUCH_STEP', payload: { stepID } });
   }
 
   const isReorderRequired = useRef<boolean>(true);
@@ -191,6 +201,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     setActive,
     setOpen,
     setConfirmed,
+    resetConfirmation,
     setFailed,
     setPending,
     setTouched,
@@ -198,6 +209,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     getValues,
     getConfirmed: getConfirmed as GetState<StepsHash, boolean>,
     calculateStepOrder: createStepsOrder,
+    touchStep,
   };
 }
 

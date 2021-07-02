@@ -3,6 +3,7 @@ import { StepsBase } from './types/steps';
 import { useStepsContext } from './stepsContext';
 import { UseStepResult } from './types/useStep';
 import { strictEqual } from './utils';
+import { SetConfirmedStateParams } from './types/api';
 
 function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
   stepID: StepID,
@@ -48,6 +49,8 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
     setConfirmed,
     setFailed,
     setPending,
+    // touching
+    touchStep,
     // Last modified steps (Only the value change in value is taken)
     changedSteps,
   } = context;
@@ -80,13 +83,13 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
   const setStepActiveStatus = (status: boolean) => setActive(stepID, status);
   const setStepPendingStatus = (status: boolean) => setPending(stepID, status);
   const setStepFailedStatus = (status: boolean) => setFailed(stepID, status);
-  const setStepConfirmedStatus = (status: boolean) => {
+  const setStepConfirmedStatus = (params: SetConfirmedStateParams<StepsHash> = {}) => {
     /** If the step was touched or failed,
      * then its confirmation should set these statuses to 'false'
      * */
     // if (isStepTouched) setStepTouchedStatus(false);
     // if (isStepFailed) setStepFailedStatus(false);
-    setConfirmed(stepID, status);
+    setConfirmed(stepID, params);
   };
 
   /**
@@ -164,10 +167,11 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
    * as part of event handlers.
    */
   const detectChange = () => {
+    touchStep(stepID);
     // TODO temporary
-    setStepActiveStatus(true);
-    setStepTouchedStatus(true);
-    setStepConfirmedStatus(false);
+    // setStepActiveStatus(true);
+    // setStepTouchedStatus(true);
+    // setStepConfirmedStatus(false);
     // if (!isStepActive) {
     //   console.log('step was passive!');
     //   setStepActiveStatus(true);
