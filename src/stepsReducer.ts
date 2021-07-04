@@ -5,6 +5,12 @@ import { StepsBooleanInfo } from './types/info';
 const getOpenSteps = <Steps>(stepsInfo: StepsBooleanInfo<Steps>, nextStep?: keyof Steps) =>
   nextStep === undefined ? stepsInfo : { ...stepsInfo, [nextStep]: true };
 
+const getVisitedSteps = <Steps>(stepsInfo: StepsBooleanInfo<Steps>, nextStep?: keyof Steps) => {
+  if (nextStep === undefined) return stepsInfo;
+  if (stepsInfo[nextStep] === true) return stepsInfo;
+  return { ...stepsInfo, [nextStep]: true };
+};
+
 const getStepValues = <Steps, StepID extends keyof Steps>(
   stepsValues: Steps,
   stepID: StepID,
@@ -75,6 +81,7 @@ const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<St
         touchedSteps: { ...state.touchedSteps, [action.payload.stepID]: false },
         failedSteps: { ...state.failedSteps, [action.payload.stepID]: false },
         openSteps: getOpenSteps(state.openSteps, action.payload.nextStep),
+        visitedSteps: getVisitedSteps(state.openSteps, action.payload.nextStep),
       };
     case 'RESET_STEP_CONFIRMATION':
       return {

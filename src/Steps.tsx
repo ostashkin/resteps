@@ -20,6 +20,7 @@ function createConfirmationValues<StepsHash extends StepsBase>(
     failedSteps: state.failedSteps,
     openedSteps: state.openSteps,
     touchedSteps: state.touchedSteps,
+    visitedSteps: state.visitedSteps,
   };
 }
 
@@ -39,6 +40,10 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     touchedSteps: config.initialTouched || {},
     failedSteps: config.initialFailed || {},
     openSteps: {
+      ...config.initialOpen,
+      [config.initialActive]: true,
+    } as StepsBooleanInfo<StepsHash>,
+    visitedSteps: {
       ...config.initialOpen,
       [config.initialActive]: true,
     } as StepsBooleanInfo<StepsHash>,

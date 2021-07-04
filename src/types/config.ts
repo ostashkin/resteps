@@ -10,6 +10,7 @@ export interface ConfirmationValues<StepsHash extends StepsBase> {
   touchedSteps: StepsBooleanInfo<StepsHash>;
   confirmedSteps: StepsBooleanInfo<StepsHash>;
   failedSteps: StepsBooleanInfo<StepsHash>;
+  visitedSteps: StepsBooleanInfo<StepsHash>;
 }
 
 export interface OnStepConfirmed<StepsHash extends StepsBase> {

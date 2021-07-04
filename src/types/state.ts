@@ -9,5 +9,6 @@ export interface StepsState<StepsHash extends StepsBase> {
   failedSteps: StepsBooleanInfo<StepsHash>;
   openSteps: StepsBooleanInfo<StepsHash>;
   pendingSteps: StepsBooleanInfo<StepsHash>;
+  visitedSteps: StepsBooleanInfo<StepsHash>;
   orderHash: StepsInfo<StepsHash, number>;
 }
