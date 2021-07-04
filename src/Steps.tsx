@@ -129,6 +129,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
       changedSteps.current = findChangedSteps(stepIDORPayload, previousValues.current);
       dispatch({ type: 'SET_ALL_VALUES', payload: stepIDORPayload });
     } else {
+      console.log('changed values', stepIDORPayload, values);
       // TODO Write comment or refactor
       changedSteps.current = [stepIDORPayload];
       dispatch({
