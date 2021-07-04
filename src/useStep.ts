@@ -11,6 +11,10 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
 ): UseStepResult<StepsHash, StepsHash[StepID]> {
   const context = useStepsContext<StepsHash>();
 
+  useEffect(() => {
+    console.log('rerender', stepID);
+  });
+
   /**
    * We need to track internal re-renders to prevent
    * the execution of the step number calculation function

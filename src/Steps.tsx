@@ -221,6 +221,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
   };
 
   useEffect(() => {
+    console.log('all steps rendered');
     if (isReorderRequired.current) {
       isReorderRequired.current = false;
       previousStepsOrder.current = Array.prototype.concat.call(stepsOrder.current);
