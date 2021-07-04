@@ -216,6 +216,11 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
       const stepOrder = stepsOrder.current.push(id);
       if (stepOrder !== state.orderHash[id]) {
         isReorderRequired.current = true;
+        console.log('---');
+        console.log(id, 'initiated reorder');
+        console.log('---');
+      } else {
+        console.log(id, 'rendered without reorder');
       }
     }
   };
@@ -223,6 +228,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
   useEffect(() => {
     console.log('all steps rendered');
     if (isReorderRequired.current) {
+      console.log('REORDERING');
       isReorderRequired.current = false;
       previousStepsOrder.current = Array.prototype.concat.call(stepsOrder.current);
       const orderHash = stepsOrder.current.reduce(
