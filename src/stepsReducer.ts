@@ -11,6 +11,22 @@ const getStepValues = <Steps, StepID extends keyof Steps>(
   newValues?: Steps[StepID]
 ) => (newValues === undefined ? stepsValues : { ...stepsValues, [stepID]: newValues });
 
+const makeStateAfterTouching = <Steps>(state: StepsState<Steps>, stepID: keyof Steps) => {
+  const isStepActive = state.activeStep === stepID;
+  const isStepTouched = state.touchedSteps[stepID] === true;
+  const isStepNotConfirmed = state.confirmedSteps[stepID] !== true;
+
+  if (isStepActive && isStepTouched && isStepNotConfirmed) return state;
+  return {
+    ...state,
+    activeStep: stepID,
+    touchedSteps: isStepTouched ? state.touchedSteps : { ...state.touchedSteps, [stepID]: true },
+    confirmedSteps: isStepNotConfirmed
+      ? state.confirmedSteps
+      : { ...state.confirmedSteps, [stepID]: false },
+  };
+};
+
 const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<Steps>) => {
   switch (action.type) {
     case 'SET_ALL_VALUES':
@@ -74,12 +90,7 @@ const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<St
         },
       };
     case 'TOUCH_STEP':
-      return {
-        ...state,
-        activeStep: action.payload.stepID,
-        confirmedSteps: { ...state.confirmedSteps, [action.payload.stepID]: false },
-        touchedSteps: { ...state.touchedSteps, [action.payload.stepID]: true },
-      };
+      return makeStateAfterTouching(state, action.payload.stepID);
     case 'SET_STEPS_ORDER':
       return { ...state, orderHash: action.payload };
     default:
