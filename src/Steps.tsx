@@ -48,7 +48,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
 
   const needToCallConfirmCallback = useRef<boolean>(false);
   useEffect(() => {
-    if (needToCallConfirmCallback) {
+    if (needToCallConfirmCallback.current) {
       needToCallConfirmCallback.current = false;
       if (config.onStepConfirmed !== undefined) {
         config.onStepConfirmed(createConfirmationValues(state));
