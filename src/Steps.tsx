@@ -52,11 +52,25 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     orderHash: {},
   });
 
+  const isReorderRequired = useRef<boolean>(true);
+  const stepsOrder = useRef<(keyof StepsHash)[]>([]);
+  const previousStepsOrder = useRef<(keyof StepsHash)[]>([]);
+
+  const createStepsOrder = (id: keyof StepsHash) => {
+    if (previousStepsOrder.current.length === 0) {
+      stepsOrder.current.push(id);
+    } else {
+      const stepOrder = stepsOrder.current.push(id);
+      isReorderRequired.current = stepOrder !== state.orderHash[id];
+    }
+  };
+
   const needToCallConfirmCallback = useRef<boolean>(false);
   useEffect(() => {
     if (needToCallConfirmCallback.current) {
       needToCallConfirmCallback.current = false;
       if (config.onStepConfirmed !== undefined) {
+        console.log(isReorderRequired.current);
         config.onStepConfirmed(createConfirmationValues(state));
       }
     }
@@ -204,19 +218,6 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
   function touchStep(stepID: keyof StepsHash) {
     dispatch({ type: 'TOUCH_STEP', payload: { stepID } });
   }
-
-  const isReorderRequired = useRef<boolean>(true);
-  const stepsOrder = useRef<(keyof StepsHash)[]>([]);
-  const previousStepsOrder = useRef<(keyof StepsHash)[]>([]);
-
-  const createStepsOrder = (id: keyof StepsHash) => {
-    if (previousStepsOrder.current.length === 0) {
-      stepsOrder.current.push(id);
-    } else {
-      const stepOrder = stepsOrder.current.push(id);
-      isReorderRequired.current = stepOrder !== state.orderHash[id];
-    }
-  };
 
   useEffect(() => {
     if (isReorderRequired.current) {
