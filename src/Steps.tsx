@@ -66,15 +66,38 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
   };
 
   const needToCallConfirmCallback = useRef<boolean>(false);
+  const onStepsReorderState = useRef<StepsState<StepsHash> | null>(null);
   useEffect(() => {
     if (needToCallConfirmCallback.current) {
-      needToCallConfirmCallback.current = false;
       if (config.onStepConfirmed !== undefined) {
-        console.log(isReorderRequired.current);
-        config.onStepConfirmed(createConfirmationValues(state));
+        if (!isReorderRequired.current) {
+          console.log('instant confirmation');
+          needToCallConfirmCallback.current = false;
+          config.onStepConfirmed(createConfirmationValues(state));
+        } else {
+          console.log('delayed confirmation');
+          onStepsReorderState.current = state;
+        }
       }
     }
   }, [state.confirmedSteps]);
+
+  useEffect(() => {
+    if (
+      needToCallConfirmCallback.current &&
+      config.onStepConfirmed !== undefined &&
+      onStepsReorderState.current !== null
+    ) {
+      console.log('confirmation after delay');
+      needToCallConfirmCallback.current = false;
+      const updatedConfirmationValues: StepsState<StepsHash> = {
+        ...onStepsReorderState.current,
+        orderHash: state.orderHash,
+      };
+      onStepsReorderState.current = null;
+      config.onStepConfirmed(createConfirmationValues(updatedConfirmationValues));
+    }
+  }, [state.orderHash]);
 
   const previousValues = useRef<StepsHash>(config.initialValues);
 
