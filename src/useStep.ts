@@ -12,8 +12,9 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
   const context = useStepsContext<StepsHash>();
 
   useEffect(() => {
-    console.log('rerender', stepID);
-  });
+    console.log('rerender from context', stepID);
+    context.calculateStepOrder(stepID);
+  }, [context]);
 
   /**
    * We need to track internal re-renders to prevent
@@ -23,12 +24,13 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
   useEffect(() => {
     if (isInnerRerender.current) {
       /** If this is an internal rerender, we reset the ref */
+      console.log('inner rerender', stepID);
       isInnerRerender.current = false;
     } else {
       /** If this is an external rerender,
        * we execute the function for calculating the step number
        * */
-      context.calculateStepOrder(stepID);
+      // context.calculateStepOrder(stepID);
     }
   });
 
