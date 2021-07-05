@@ -21,6 +21,7 @@ function createConfirmationValues<StepsHash extends StepsBase>(
     openedSteps: state.openSteps,
     touchedSteps: state.touchedSteps,
     visitedSteps: state.visitedSteps,
+    stepsOrder: state.orderHash,
   };
 }
 
@@ -134,7 +135,6 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
       changedSteps.current = findChangedSteps(stepIDORPayload, previousValues.current);
       dispatch({ type: 'SET_ALL_VALUES', payload: stepIDORPayload });
     } else {
-      console.log('changed values', stepIDORPayload, values);
       // TODO Write comment or refactor
       changedSteps.current = [stepIDORPayload];
       dispatch({
@@ -214,22 +214,12 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
       stepsOrder.current.push(id);
     } else {
       const stepOrder = stepsOrder.current.push(id);
-      if (stepOrder !== state.orderHash[id]) {
-        isReorderRequired.current = true;
-        console.log('---');
-        console.log(id, 'initiated reorder');
-        console.log('stepsOrder', stepsOrder.current.concat());
-        console.log('---');
-      } else {
-        console.log(id, 'rendered without reorder');
-      }
+      isReorderRequired.current = stepOrder !== state.orderHash[id];
     }
   };
 
   useEffect(() => {
-    console.log('all steps rendered');
     if (isReorderRequired.current) {
-      console.log('REORDERING');
       isReorderRequired.current = false;
       previousStepsOrder.current = Array.prototype.concat.call(stepsOrder.current);
       const orderHash = stepsOrder.current.reduce(

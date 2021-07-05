@@ -12,27 +12,8 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
   const context = useStepsContext<StepsHash>();
 
   useEffect(() => {
-    console.log('rerender from context', stepID);
     context.calculateStepOrder(stepID);
   }, [context]);
-
-  /**
-   * We need to track internal re-renders to prevent
-   * the execution of the step number calculation function
-   */
-  const isInnerRerender = useRef<boolean>(false);
-  useEffect(() => {
-    if (isInnerRerender.current) {
-      /** If this is an internal rerender, we reset the ref */
-      console.log('inner rerender', stepID);
-      isInnerRerender.current = false;
-    } else {
-      /** If this is an external rerender,
-       * we execute the function for calculating the step number
-       * */
-      // context.calculateStepOrder(stepID);
-    }
-  });
 
   const {
     // Initial values
@@ -147,14 +128,7 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
     checkStatus(isPreviousConfirmed, isStepConfirmed);
     checkStatus(isPreviousOpen, isStepOpen);
 
-    if (isRerenderRequired) {
-      /**
-       * Mark re-render as internal to prevent
-       * the execution of the step number calculation function
-       */
-      isInnerRerender.current = true;
-      rerender();
-    }
+    if (isRerenderRequired) rerender();
   }, [
     changedSteps,
     hooks,
@@ -174,22 +148,6 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
    */
   const detectChange = () => {
     touchStep(stepID);
-    // TODO temporary
-    // setStepActiveStatus(true);
-    // setStepTouchedStatus(true);
-    // setStepConfirmedStatus(false);
-    // if (!isStepActive) {
-    //   console.log('step was passive!');
-    //   setStepActiveStatus(true);
-    //   setStepTouchedStatus(true);
-    //   if (isStepConfirmed) {
-    //     console.log('step was confirmed!');
-    //     setStepConfirmedStatus(false);
-    //   }
-    // } else if (!isStepTouched) {
-    //   console.log('step was active, but not touched!');
-    //   setStepTouchedStatus(true);
-    // }
   };
 
   return {

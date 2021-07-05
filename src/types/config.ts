@@ -1,6 +1,6 @@
 import React from 'react';
 import { StepsBase } from './steps';
-import { StepsBooleanInfo } from './info';
+import { StepsBooleanInfo, StepsInfo } from './info';
 import { StepsChildrenProps } from './props';
 
 export interface ConfirmationValues<StepsHash extends StepsBase> {
@@ -11,6 +11,7 @@ export interface ConfirmationValues<StepsHash extends StepsBase> {
   confirmedSteps: StepsBooleanInfo<StepsHash>;
   failedSteps: StepsBooleanInfo<StepsHash>;
   visitedSteps: StepsBooleanInfo<StepsHash>;
+  stepsOrder: StepsInfo<StepsHash, number>;
 }
 
 export interface OnStepConfirmed<StepsHash extends StepsBase> {
