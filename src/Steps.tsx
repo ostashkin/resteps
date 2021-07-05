@@ -71,11 +71,9 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
     if (needToCallConfirmCallback.current) {
       if (config.onStepConfirmed !== undefined) {
         if (!isReorderRequired.current) {
-          console.log('instant confirmation');
           needToCallConfirmCallback.current = false;
           config.onStepConfirmed(createConfirmationValues(state));
         } else {
-          console.log('delayed confirmation');
           onStepsReorderState.current = state;
         }
       }
@@ -88,7 +86,6 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
       config.onStepConfirmed !== undefined &&
       onStepsReorderState.current !== null
     ) {
-      console.log('confirmation after delay');
       needToCallConfirmCallback.current = false;
       const updatedConfirmationValues: StepsState<StepsHash> = {
         ...onStepsReorderState.current,
