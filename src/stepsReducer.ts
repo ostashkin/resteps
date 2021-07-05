@@ -34,6 +34,10 @@ const makeStateAfterTouching = <Steps>(state: StepsState<Steps>, stepID: keyof S
 };
 
 const stepsReducer = <Steps>(state: StepsState<Steps>, action: ReducerActions<Steps>) => {
+  console.log('- START DISPATCH -');
+  console.log(action.type);
+  console.log(action.payload);
+  console.log('- FINISH DISPATCH -');
   switch (action.type) {
     case 'SET_ALL_VALUES':
       return { ...state, values: action.payload };
