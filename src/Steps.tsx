@@ -218,6 +218,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
         isReorderRequired.current = true;
         console.log('---');
         console.log(id, 'initiated reorder');
+        console.log('stepsOrder', stepsOrder.current.concat());
         console.log('---');
       } else {
         console.log(id, 'rendered without reorder');
@@ -235,6 +236,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
         (acc, stepID, index) => ({ ...acc, [stepID]: index + 1 }),
         {}
       );
+      stepsOrder.current.length = 0;
       dispatch({ type: 'SET_STEPS_ORDER', payload: orderHash });
     }
     stepsOrder.current.length = 0;
