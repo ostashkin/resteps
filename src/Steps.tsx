@@ -220,6 +220,7 @@ function useSteps<StepsHash extends StepsBase = StepsBase>(
         defaultParams,
         params
       );
+      changedSteps.current = [stepIDORPayload];
       dispatch({
         type: 'CONFIRM_STEP',
         payload: {
