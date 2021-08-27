@@ -89,9 +89,22 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
     setRerenderState((prevState) => prevState + 1);
   };
 
+  // TODO Refactor this
+  const isSubscribedStepsTouched = useRef<Record<keyof StepsHash, any>>(
+    hooks.reduce((acc, key) => ({ ...acc, [key]: undefined }), {} as Record<keyof StepsHash, any>)
+  );
+
   /** Checking whether to re-render after a state change */
   useEffect(() => {
     let isRerenderRequired = false;
+
+    // TODO Refactor this
+    hooks.forEach((key) => {
+      if (isSubscribedStepsTouched.current[key] === false && touchedSteps[key]) {
+        isRerenderRequired = true;
+      }
+      isSubscribedStepsTouched.current[key] = touchedSteps[key];
+    });
 
     /** Helper function for step states with previous values.
      * If any of the states changes, change its previous value
@@ -131,6 +144,7 @@ function useStep<StepsHash extends StepsBase, StepID extends keyof StepsHash>(
     if (isRerenderRequired) rerender();
   }, [
     changedSteps,
+    touchedSteps,
     hooks,
     isStepActive,
     isStepTouched,
