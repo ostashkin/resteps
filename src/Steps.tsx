@@ -28,7 +28,6 @@ function createConfirmationValues<StepsHash extends StepsBase>(
 function useSteps<StepsHash extends StepsBase = StepsBase>(
   config: StepsConfig<StepsHash>
 ): StepsContext<StepsHash> {
-  console.log('config from steps', config);
   const initialValues = React.useRef<StepsHash>(config.initialValues);
   const initialActive = React.useRef<keyof StepsHash>(config.initialActive);
   const changedSteps = React.useRef<(keyof StepsHash)[]>([]);
